@@ -49,7 +49,7 @@ const addToNavigation = ( blockSettings, blockName ) => {
 			...blockSettings,
 			allowedBlocks: [
 				...( blockSettings.allowedBlocks ?? [] ),
-				'outermost/mega-menu',
+				'uwd/mega-menu',
 			],
 		};
 	}
@@ -57,6 +57,6 @@ const addToNavigation = ( blockSettings, blockName ) => {
 };
 addFilter(
 	'blocks.registerBlockType',
-	'outermost-mega-menu-add-to-navigation',
+	'uwd-mega-menu-add-to-navigation',
 	addToNavigation
 );

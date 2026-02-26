@@ -1,5 +1,5 @@
 // Editor specific styles.
-.outermost-mega-menu__settings-panel {
+.uwd-mega-menu__settings-panel {
 
     // The Combobox control is placed inside a div, so this fixes some spacing issues.
     .settings-panel__description {
@@ -14,15 +14,15 @@
     }
 }
 
-.outermost-mega-menu__layout-panel {
+.uwd-mega-menu__layout-panel {
     .components-h-stack {
         &> .components-base-control  {
             margin-bottom: 0;
         }
     }
 }
-// .wp-block-outermost-mega-menu {
-//     .wp-block-outermost-mega-menu__toggle {
+// .wp-block-uwd-mega-menu {
+//     .wp-block-uwd-mega-menu__toggle {
 //         cursor: text;
 //     }
 // }

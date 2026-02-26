@@ -14,8 +14,7 @@ $disable_when_collapsed = $attributes['disableWhenCollapsed'] ?? false;
 $label                  = esc_html( $attributes['label'] ?? '' );
 $menu_slug              = esc_attr( $attributes['menuSlug'] ?? '');
 $collapsed_url          = esc_url( $attributes['collapsedUrl'] ?? '');
-$justify_menu           = esc_attr( $attributes['justifyMenu'] ?? '');
-$menu_width             = esc_attr( $attributes['width'] ?? 'content');
+$menu_mode              = esc_attr( $attributes['menuMode'] ?? 'dropdown' );
 
 // Don't display the mega menu link if there is no label or no menu slug.
 if ( ! $label || ! $menu_slug ) {
@@ -29,9 +28,8 @@ $wrapper_attributes = get_block_wrapper_attributes(
 	array( 'class' => $classes )
 );
 
-$menu_classes  = 'wp-block-outermost-mega-menu__menu-container';
-$menu_classes .= ' menu-width-' . $menu_width;
-$menu_classes .= $justify_menu ? ' menu-justified-' . $justify_menu : '';
+$menu_classes = 'wp-block-uwd-mega-menu__menu-container';
+$menu_classes .= ' mode-is-' . $menu_mode;
 
 // Icons.
 $close_icon  = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M13 11.8l6.1-6.3-1-1-6.1 6.2-6.1-6.2-1 1 6.1 6.3-6.5 6.7 1 1 6.5-6.6 6.5 6.6 1-1z"></path></svg>';
@@ -40,18 +38,19 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 
 <li
 	<?php echo $wrapper_attributes; ?>
-	data-wp-interactive='{ "namespace": "outermost/mega-menu" }'
-	data-wp-context='{ "menuOpenedBy": {} }'
+	data-wp-interactive='{ "namespace": "uwd/mega-menu" }'
+	data-wp-context='{ "menuOpenedBy": {}, "isTogglingMenu": false }'
 	data-wp-on--focusout="actions.handleMenuFocusout"
 	data-wp-on--keydown="actions.handleMenuKeydown"
 	data-wp-watch="callbacks.initMenu"
 >
 	<button
-		class="wp-block-outermost-mega-menu__toggle"
+		class="wp-block-uwd-mega-menu__toggle"
+		data-wp-on--mousedown="actions.handleToggleMousedown"
 		data-wp-on--click="actions.toggleMenuOnClick"
 		data-wp-bind--aria-expanded="state.isMenuOpen"
 	>
-		<?php echo $label; ?><span class="wp-block-outermost-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span>
+		<?php echo $label; ?><span class="wp-block-uwd-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span>
 	</button>
 
 	<div
@@ -70,7 +69,7 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 	</div>
 
 	<?php if ( $disable_when_collapsed && $collapsed_url ) { ?>
-		<a class="wp-block-outermost-mega-menu__collapsed-link" href="<?php echo $collapsed_url; ?>">
+		<a class="wp-block-uwd-mega-menu__collapsed-link" href="<?php echo $collapsed_url; ?>">
 			<span class="wp-block-navigation-item__label"><?php echo $label; ?></span>
 		</a>
 	<?php } ?>

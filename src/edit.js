@@ -19,6 +19,7 @@ import {
 	ToggleControl,
 	__experimentalHStack as HStack, // eslint-disable-line
 	__experimentalToggleGroupControl as ToggleGroupControl, // eslint-disable-line
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon, // eslint-disable-line
 } from '@wordpress/components';
 import {
@@ -55,8 +56,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		description,
 		disableWhenCollapsed,
 		collapsedUrl,
-		justifyMenu,
-		width,
+		menuMode,
 	} = attributes;
 
 	// Get the Url for the template part screen in the Site Editor.
@@ -133,7 +133,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	// Modify block props.
 	const blockProps = useBlockProps( {
 		className:
-			'wp-block-navigation-item wp-block-outermost-mega-menu__toggle',
+			'wp-block-navigation-item wp-block-uwd-mega-menu__toggle',
 	} );
 
 	const justificationOptions = [
@@ -184,7 +184,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls group="settings">
 				<PanelBody
-					className="outermost-mega-menu__settings-panel"
+					className="uwd-mega-menu__settings-panel"
 					title={ __( 'Settings', 'mega-menu-block' ) }
 					initialOpen={ true }
 				>
@@ -289,64 +289,23 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 				</PanelBody>
 				<PanelBody
-					className="outermost-mega-menu__layout-panel"
+					className="uwd-mega-menu__layout-panel"
 					title={ __( 'Layout', 'mega-menu-block' ) }
 					initialOpen={ true }
 				>
-					<HStack alignment="top" justify="space-between">
-						<ToggleGroupControl
-							className="block-editor-hooks__flex-layout-justification-controls"
-							label={ __( 'Justification', 'mega-menu-block' ) }
-							value={ justifyMenu }
-							onChange={ ( justificationValue ) => {
-								setAttributes( {
-									justifyMenu: justificationValue,
-								} );
-							} }
-							isDeselectable={ true }
-						>
-							{ justificationOptions.map(
-								( { value, icon, iconLabel } ) => {
-									return (
-										<ToggleGroupControlOptionIcon
-											key={ value }
-											value={ value }
-											icon={ icon }
-											label={ iconLabel }
-										/>
-									);
-								}
-							) }
-						</ToggleGroupControl>
-						<ToggleGroupControl
-							className="block-editor-hooks__flex-layout-justification-controls"
-							label={ __( 'Width', 'mega-menu-block' ) }
-							value={ width || 'content' }
-							onChange={ ( widthValue ) => {
-								setAttributes( {
-									width: widthValue,
-								} );
-							} }
-							__nextHasNoMarginBottom
-						>
-							{ widthOptions.map(
-								( { value, icon, iconLabel } ) => {
-									return (
-										<ToggleGroupControlOptionIcon
-											key={ value }
-											value={ value }
-											icon={ icon }
-											label={ iconLabel }
-										/>
-									);
-								}
-							) }
-						</ToggleGroupControl>
-					</HStack>
+					<ToggleGroupControl
+						label={ __( 'Menu Mode', 'mega-menu-block' ) }
+						value={ menuMode }
+						isBlock
+						onChange={ ( value ) => setAttributes( { menuMode: value } ) }
+					>
+						<ToggleGroupControlOption value="dropdown" label="Dropdown" />
+						<ToggleGroupControlOption value="slide-in-right" label="Slide-in Right" />
+					</ToggleGroupControl>
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
-				<button className="wp-block-navigation-item__content wp-block-outermost-mega-menu__toggle">
+				<button className="wp-block-navigation-item__content wp-block-uwd-mega-menu__toggle">
 					<RichText
 						identifier="label"
 						className="wp-block-navigation-item__label"
@@ -368,7 +327,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							'core/strikethrough',
 						] }
 					/>
-					<span className="wp-block-outermost-mega-menu__toggle-icon">
+					<span className="wp-block-uwd-mega-menu__toggle-icon">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="12"

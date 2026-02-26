@@ -1,6 +1,9 @@
 // Styles for both the Editor and the front end.
-.wp-block-outermost-mega-menu {
-    .wp-block-outermost-mega-menu__toggle {
+.wp-block-uwd-mega-menu {
+    $self: &;
+    position: relative;
+    z-index: 99999;
+    &__toggle {
         background-color: initial;
         border: none;
         color: currentColor;
@@ -13,40 +16,27 @@
         padding: 0;
         text-align: left;
         text-transform: inherit;
-
-        .wp-block-outermost-mega-menu__toggle-icon {
-            align-self: center;
+        &[aria-expanded=true] #{$self}__toggle-icon svg {
+            transform: rotate(0deg);
+        }
+    }
+    &__toggle-icon {
+        align-self: center;
+        display: inline-block;
+        font-size: inherit;
+        width: 0.6em;
+        height: 0.6em;
+        line-height: 0;
+        margin-left: 0.25em;
+        padding: 0;
+        svg {
+            stroke: currentColor;
             display: inline-block;
-            font-size: inherit;
-            height: 0.6em;
-            line-height: 0;
-            margin-left: 0.25em;
-            padding: 0;
-            width: 0.6em;
-
-            svg {
-                stroke: currentColor;
-                display: inline-block;
-                height: inherit;
-                margin-top: 0.075em;
-                width: inherit;
-                transition: all .1s linear;
-                transform: rotate(-90deg);
-            }
+            height: inherit;
+            margin-top: 0.075em;
+            width: inherit;
+            transition: all .1s linear;
+            transform: rotate(-90deg);
         }
-
-        &[aria-expanded=true] {
-            .wp-block-outermost-mega-menu__toggle-icon {    
-                svg {
-                    transform: rotate(0deg);
-                }
-            }
-
-            &~.wp-block-outermost-mega-menu__menu-container {
-                opacity: 1;
-                overflow: visible;
-                visibility: visible;
-            }
-        }
-    }  
+    }
 }
