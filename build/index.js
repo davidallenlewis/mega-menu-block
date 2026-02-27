@@ -60,6 +60,7 @@ function Edit({
   const {
     label,
     menuSlug,
+    description,
     disableWhenCollapsed,
     collapsedUrl,
     menuMode
@@ -106,7 +107,7 @@ function Edit({
     className: 'wp-block-navigation-item wp-block-uwd-mega-menu__toggle'
   });
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, {
-    group: "settings"
+    group: "content"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     className: "uwd-mega-menu__settings-panel",
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Settings', 'mega-menu-block'),
@@ -120,7 +121,7 @@ function Edit({
     }),
     autoComplete: "off"
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.ComboboxControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Menu Pattern', 'mega-menu-block'),
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Mega Menu Pattern', 'mega-menu-block'),
     value: menuSlug,
     options: menuOptions,
     onChange: value => setAttributes({
@@ -134,15 +135,24 @@ function Edit({
         rel: "noreferrer"
       })
     })
-  }), !hasMenus && noMenusNotice, hasMenus && !selectedMenuAndExists && menuDoesntExistNotice, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.ToggleControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disable in navigation overlay', 'mega-menu-block'),
+  }), !hasMenus && noMenusNotice, hasMenus && !selectedMenuAndExists && menuDoesntExistNotice, "    ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.TextareaControl, {
+    className: "settings-panel__description",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Description', 'mega-menu-block'),
+    value: description || '',
+    onChange: value => setAttributes({
+      description: value
+    }),
+    help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('The description will be displayed in the menu if the current theme supports it.', 'mega-menu-block'),
+    autoComplete: "off"
+  }), "     ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.ToggleControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disable mega menu in overlay', 'mega-menu-block'),
     checked: disableWhenCollapsed,
     onChange: () => {
       setAttributes({
         disableWhenCollapsed: !disableWhenCollapsed
       });
     },
-    help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('When the navigation options are displayed in an overlay, typically on mobile devices, disable the mega menu.', 'mega-menu-block')
+    help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('When the navigation is displayed in an overlay, typically on mobile devices, disable the mega menu.', 'mega-menu-block')
   }), disableWhenCollapsed && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.TextControl, {
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Url', 'mega-menu-block'),
     type: "text",
@@ -152,9 +162,11 @@ function Edit({
         collapsedUrl: collapsedUrlValue
       });
     },
-    help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('When the navigtion menu is collapsed, link to this URL instead.', 'mega-menu-block'),
+    help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('When the mega menu is disabled in the overlay, link to this URL instead.', 'mega-menu-block'),
     autoComplete: "off"
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, {
+    group: "settings"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     className: "uwd-mega-menu__layout-panel",
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Layout', 'mega-menu-block'),
     initialOpen: true
@@ -171,6 +183,9 @@ function Edit({
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToggleGroupControlOption, {
     value: "slide-in-right",
     label: "Slide-in Right"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToggleGroupControlOption, {
+    value: "slide-in-left",
+    label: "Slide-in Left"
   })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...blockProps
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
@@ -399,7 +414,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 (module) {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"uwd/mega-menu","version":"0.1.0","title":"Mega Menu","category":"design","description":"Add a mega menu to your navigation.","parent":["core/navigation"],"example":{},"attributes":{"label":{"type":"string"},"menuSlug":{"type":"string"},"disableWhenCollapsed":{"type":"boolean"},"collapsedUrl":{"type":"string"},"menuMode":{"type":"string","default":"dropdown"}},"supports":{"html":false,"interactivity":true,"renaming":false,"reusable":false,"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}},"__experimentalSlashInserter":true},"textdomain":"mega-menu-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js","viewStyle":"file:./index.css"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"uwd/mega-menu","version":"0.1.0","title":"Mega Menu","category":"design","description":"Add a mega menu to your navigation.","parent":["core/navigation"],"example":{},"attributes":{"label":{"type":"string"},"description":{"type":"string"},"menuSlug":{"type":"string"},"disableWhenCollapsed":{"type":"boolean"},"collapsedUrl":{"type":"string"},"menuMode":{"type":"string","default":"dropdown"}},"supports":{"html":false,"interactivity":true,"renaming":false,"reusable":false,"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}},"__experimentalSlashInserter":true},"textdomain":"mega-menu-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js","viewStyle":"file:./index.css"}');
 
 /***/ }
 

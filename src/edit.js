@@ -14,6 +14,7 @@ import {
 	PanelBody,
 	Notice,
 	TextControl,
+	TextareaControl,
 	ToggleControl,
 	__experimentalHStack as HStack, // eslint-disable-line
 	__experimentalToggleGroupControl as ToggleGroupControl, // eslint-disable-line
@@ -50,6 +51,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const {
 		label,
 		menuSlug,
+		description,
 		disableWhenCollapsed,
 		collapsedUrl,
 		menuMode,
@@ -132,7 +134,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	return (
 		<>
-			<InspectorControls group="settings">
+			<InspectorControls group="content">
 				<PanelBody
 					className="uwd-mega-menu__settings-panel"
 					title={ __( 'Settings', 'mega-menu-block' ) }
@@ -148,7 +150,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						autoComplete="off"
 					/>
 					<ComboboxControl
-						label={ __( 'Menu Pattern', 'mega-menu-block' ) }
+						label={ __( 'Mega Menu Pattern', 'mega-menu-block' ) }
 						value={ menuSlug }
 						options={ menuOptions }
 						onChange={ ( value ) =>
@@ -176,10 +178,21 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ ! hasMenus && noMenusNotice }
 					{ hasMenus &&
 						! selectedMenuAndExists &&
-						menuDoesntExistNotice }
-					<ToggleControl
+						menuDoesntExistNotice }				<TextareaControl
+					className="settings-panel__description"
+					label={ __( 'Description', 'mega-menu-block' ) }
+					value={ description || '' }
+					onChange={ ( value ) =>
+						setAttributes( { description: value } )
+					}
+					help={ __(
+						'The description will be displayed in the menu if the current theme supports it.',
+						'mega-menu-block'
+					) }
+					autoComplete="off"
+				/>					<ToggleControl
 						label={ __(
-							'Disable in navigation overlay',
+							'Disable mega menu in overlay',
 							'mega-menu-block'
 						) }
 						checked={ disableWhenCollapsed }
@@ -189,7 +202,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							} );
 						} }
 						help={ __(
-							'When the navigation options are displayed in an overlay, typically on mobile devices, disable the mega menu.',
+							'When the navigation is displayed in an overlay, typically on mobile devices, disable the mega menu.',
 							'mega-menu-block'
 						) }
 					/>
@@ -204,13 +217,15 @@ export default function Edit( { attributes, setAttributes } ) {
 								} );
 							} }
 							help={ __(
-								'When the navigtion menu is collapsed, link to this URL instead.',
+								'When the mega menu is disabled in the overlay, link to this URL instead.',
 								'mega-menu-block'
 							) }
 							autoComplete="off"
 						/>
 					) }
 				</PanelBody>
+			</InspectorControls>
+			<InspectorControls group="settings">
 				<PanelBody
 					className="uwd-mega-menu__layout-panel"
 					title={ __( 'Layout', 'mega-menu-block' ) }
@@ -224,6 +239,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					>
 						<ToggleGroupControlOption value="dropdown" label="Dropdown" />
 						<ToggleGroupControlOption value="slide-in-right" label="Slide-in Right" />
+						<ToggleGroupControlOption value="slide-in-left" label="Slide-in Left" />
 					</ToggleGroupControl>
 				</PanelBody>
 			</InspectorControls>
