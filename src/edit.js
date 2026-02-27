@@ -14,7 +14,6 @@ import {
 	PanelBody,
 	Notice,
 	TextControl,
-	TextareaControl,
 	ToggleControl,
 	__experimentalHStack as HStack, // eslint-disable-line
 	__experimentalToggleGroupControl as ToggleGroupControl, // eslint-disable-line
@@ -51,8 +50,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	const {
 		label,
 		menuSlug,
-		title,
-		description,
 		disableWhenCollapsed,
 		collapsedUrl,
 		menuMode,
@@ -180,33 +177,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ hasMenus &&
 						! selectedMenuAndExists &&
 						menuDoesntExistNotice }
-					<TextareaControl
-						className="settings-panel__description"
-						label={ __( 'Description', 'mega-menu-block' ) }
-						type="text"
-						value={ description || '' }
-						onChange={ ( descriptionValue ) => {
-							setAttributes( { description: descriptionValue } );
-						} }
-						help={ __(
-							'The description will be displayed in the menu if the current theme supports it.',
-							'mega-menu-block'
-						) }
-						autoComplete="off"
-					/>
-					<TextControl
-						label={ __( 'Title', 'mega-menu-block' ) }
-						type="text"
-						value={ title || '' }
-						onChange={ ( titleValue ) => {
-							setAttributes( { title: titleValue } );
-						} }
-						help={ __(
-							'Additional information to help clarify the purpose of the link.',
-							'mega-menu-block'
-						) }
-						autoComplete="off"
-					/>
 					<ToggleControl
 						label={ __(
 							'Disable in navigation overlay',
@@ -296,11 +266,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							></path>
 						</svg>
 					</span>
-					{ description && (
-						<span className="wp-block-navigation-item__description">
-							{ description }
-						</span>
-					) }
+	
 				</button>
 			</div>
 		</>
