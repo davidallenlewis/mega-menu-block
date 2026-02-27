@@ -5,14 +5,29 @@
   visibility: hidden;
   opacity: 0;
   transition: transform 0.3s ease, visibility 0.3s ease, opacity 0.3s ease;
+  color: initial;
+  font-weight: initial;
+  font-size: initial;
+  letter-spacing: initial;
+  line-height: initial;
+  text-decoration: initial;
+  text-transform: initial;
 }
 .wp-block-uwd-mega-menu__menu-container.mode-is-dropdown {
   right: 0;
   overflow: hidden;
   position: absolute;
   top: calc(100% + 20px);
-  transform: translateX(50%) translateY(-50px);
+  transform: translateX(50%);
   width: 0;
+}
+.wp-block-uwd-mega-menu__menu-container.mode-is-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  right: 0;
+  left: 0;
+  height: 20px;
 }
 .wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-left, .wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-right {
   height: calc(100vh - var(--slide-in-top, 0px));

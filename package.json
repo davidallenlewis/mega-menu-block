@@ -15,7 +15,7 @@
 		"start": "wp-scripts start --experimental-modules",
 		"packages-update": "wp-scripts packages-update",
 		"update-pot": "wp i18n make-pot . languages/mega-menu-block.pot --exclude=src",
-		"plugin-zip": "npm run plugin-zip && copyfiles --verbose mega-menu-block.zip _playground/ && rm mega-menu-block.zip"
+		"plugin-zip": "npm run build && zip -r ~/Desktop/mega-menu-block.zip build includes languages mega-menu-block.php readme.txt"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.2.0",

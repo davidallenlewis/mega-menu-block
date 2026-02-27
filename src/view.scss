@@ -6,14 +6,34 @@
 		opacity: 0;
 		transition: transform .3s ease, visibility .3s ease, opacity .3s ease;
 		
+		// Prevent Mega Menu from inheriting styles from Navigation Block.
+		color: initial;
+		font-weight: initial;
+		font-size: initial;
+		letter-spacing: initial;
+		line-height: initial;
+		text-decoration: initial;
+		text-transform: initial;
+		
 		// Menu Modes
 		&.mode-is-dropdown {
 			left: 0;
 			overflow: hidden;
 			position: absolute;
 			top: calc(100% + 20px);
-			transform: translateX(-50%) translateY(-50px);
+			transform: translateX(-50%);
 			width: 0;
+			// Invisible bridge that fills the 20px gap between the toggle and the
+			// menu. The mouse stays over a descendant of the <li> while crossing
+			// the gap, so mouseleave never fires and the menu stays open.
+			&::before {
+				content: '';
+				position: absolute;
+				top: -20px;
+				left: 0;
+				right: 0;
+				height: 20px;
+			}
 		}
 		&.mode-is-slide-in-left, &.mode-is-slide-in-right {
 			height: calc(100vh - var(--slide-in-top, 0px));

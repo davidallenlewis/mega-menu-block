@@ -56,6 +56,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		collapsedUrl,
 		menuMode,
 		showChevron,
+		triggerOn,
 	} = attributes;
 
 	// Get the URL for the patterns screen in the Site Editor.
@@ -233,6 +234,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					initialOpen={ true }
 				>
 					<ToggleGroupControl
+						label={ __( 'Trigger', 'mega-menu-block' ) }
+						value={ triggerOn }
+						isBlock
+						onChange={ ( value ) => setAttributes( { triggerOn: value } ) }
+					>
+						<ToggleGroupControlOption value="click" label={ __( 'Click', 'mega-menu-block' ) } />
+						<ToggleGroupControlOption value="hover" label={ __( 'Hover', 'mega-menu-block' ) } />
+					</ToggleGroupControl>
+					<ToggleGroupControl
 						label={ __( 'Menu Mode', 'mega-menu-block' ) }
 						value={ menuMode }
 						isBlock
@@ -272,6 +282,8 @@ export default function Edit( { attributes, setAttributes } ) {
 							'core/italic',
 							'core/image',
 							'core/strikethrough',
+							'core/superscript',
+							'core/subscript',
 						] }
 					/>
 					

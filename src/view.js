@@ -3,6 +3,11 @@
  */
 import { store, getContext, getElement } from '@wordpress/interactivity';
 
+// Timeout IDs for hover-close delays, keyed by the <li> DOM ref.
+// Cannot store in WP Interactivity context because getContext() is only
+// valid during synchronous event dispatch — not inside setTimeout callbacks.
+const hoverTimeouts = new WeakMap();
+
 const { state, actions } = store( 'uwd/mega-menu', {
 	state: {
 		get isMenuOpen() {
@@ -57,13 +62,65 @@ const { state, actions } = store( 'uwd/mega-menu', {
 		closeMenuOnClick() {
 			actions.closeMenu( 'click' );
 			actions.closeMenu( 'focus' );
+			actions.closeMenu( 'hover' );
+		},
+		handleMenuMouseenter() {
+			const context = getContext();
+			if ( context.triggerOn !== 'hover' ) return;
+			const { ref } = getElement(); // ref is the <li>
+
+			// Cancel any pending close timeout — covers the gap between the
+			// toggle button and the dropdown, and hovering back in after leaving.
+			if ( hoverTimeouts.has( ref ) ) {
+				clearTimeout( hoverTimeouts.get( ref ) );
+				hoverTimeouts.delete( ref );
+			}
+
+			// Calculate centering offsets (same logic as click trigger).
+			const liLeft = ref.getBoundingClientRect().left;
+			const cssLeft = ( document.documentElement.clientWidth / 2 ) - liLeft;
+			ref.style.setProperty( '--dropdown-left', `${ cssLeft }px` );
+
+			const toggleBtn = ref.querySelector( '.wp-block-uwd-mega-menu__toggle' );
+			if ( toggleBtn ) {
+				const rect = toggleBtn.getBoundingClientRect();
+				ref.style.setProperty( '--slide-in-top', `${ rect.bottom + 20 }px` );
+				context.previousFocus = toggleBtn;
+			}
+
+			actions.openMenu( 'hover' );
+		},
+		handleMenuMouseleave() {
+			const context = getContext();
+			if ( context.triggerOn !== 'hover' ) return;
+			const { ref } = getElement();
+
+			// context is captured synchronously here. Inside the timeout we
+			// mutate the reactive proxy directly — we cannot call closeMenu()
+			// or any action that calls getContext() from an async callback.
+			if ( hoverTimeouts.has( ref ) ) {
+				clearTimeout( hoverTimeouts.get( ref ) );
+			}
+			const id = setTimeout( () => {
+				hoverTimeouts.delete( ref );
+				context.menuOpenedBy.hover = false;
+				if ( ! Object.values( context.menuOpenedBy ).some( Boolean ) ) {
+					if ( context.megaMenu?.contains( window.document.activeElement ) ) {
+						context.previousFocus?.focus();
+					}
+					context.previousFocus = null;
+					context.megaMenu = null;
+				}
+			}, 200 );
+			hoverTimeouts.set( ref, id );
 		},
 		handleMenuKeydown( event ) {
-			if ( state.menuOpenedBy.click ) {
+			if ( state.menuOpenedBy.click || state.menuOpenedBy.hover ) {
 				// If Escape close the menu.
 				if ( event?.key === 'Escape' ) {
 					actions.closeMenu( 'click' );
 					actions.closeMenu( 'focus' );
+					actions.closeMenu( 'hover' );
 				}
 			}
 		},
@@ -94,6 +151,7 @@ const { state, actions } = store( 'uwd/mega-menu', {
 			) {
 				actions.closeMenu( 'click' );
 				actions.closeMenu( 'focus' );
+				actions.closeMenu( 'hover' );
 			}
 		},
 		openMenu( menuOpenedOn = 'click' ) {

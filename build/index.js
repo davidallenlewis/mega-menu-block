@@ -64,7 +64,8 @@ function Edit({
     disableWhenCollapsed,
     collapsedUrl,
     menuMode,
-    showChevron
+    showChevron,
+    triggerOn
   } = attributes;
 
   // Get the URL for the patterns screen in the Site Editor.
@@ -172,6 +173,19 @@ function Edit({
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Layout', 'mega-menu-block'),
     initialOpen: true
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToggleGroupControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Trigger', 'mega-menu-block'),
+    value: triggerOn,
+    isBlock: true,
+    onChange: value => setAttributes({
+      triggerOn: value
+    })
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToggleGroupControlOption, {
+    value: "click",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Click', 'mega-menu-block')
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToggleGroupControlOption, {
+    value: "hover",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Hover', 'mega-menu-block')
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalToggleGroupControl, {
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Menu Mode', 'mega-menu-block'),
     value: menuMode,
     isBlock: true,
@@ -206,7 +220,7 @@ function Edit({
     }),
     "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Mega menu link text', 'mega-menu-block'),
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add label…', 'mega-menu-block'),
-    allowedFormats: ['core/bold', 'core/italic', 'core/image', 'core/strikethrough']
+    allowedFormats: ['core/bold', 'core/italic', 'core/image', 'core/strikethrough', 'core/superscript', 'core/subscript']
   }), showChevron && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "wp-block-uwd-mega-menu__toggle-icon"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
@@ -421,7 +435,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 (module) {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"uwd/mega-menu","version":"0.1.0","title":"Mega Menu","category":"design","description":"Add a mega menu to your navigation.","parent":["core/navigation"],"example":{},"attributes":{"label":{"type":"string"},"description":{"type":"string"},"menuSlug":{"type":"string"},"disableWhenCollapsed":{"type":"boolean"},"collapsedUrl":{"type":"string"},"menuMode":{"type":"string","default":"dropdown"},"showChevron":{"type":"boolean","default":true}},"supports":{"html":false,"interactivity":true,"renaming":false,"reusable":false,"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}},"__experimentalSlashInserter":true},"textdomain":"mega-menu-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js","viewStyle":"file:./index.css"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"uwd/mega-menu","version":"0.1.0","title":"Mega Menu","category":"design","description":"Add a mega menu to your navigation.","parent":["core/navigation"],"example":{},"attributes":{"label":{"type":"string"},"description":{"type":"string"},"menuSlug":{"type":"string"},"disableWhenCollapsed":{"type":"boolean"},"collapsedUrl":{"type":"string"},"menuMode":{"type":"string","default":"dropdown"},"showChevron":{"type":"boolean","default":true},"triggerOn":{"type":"string","default":"click"}},"supports":{"html":false,"interactivity":true,"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}},"__experimentalSlashInserter":true},"textdomain":"mega-menu-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js","viewStyle":"file:./index.css"}');
 
 /***/ }
 

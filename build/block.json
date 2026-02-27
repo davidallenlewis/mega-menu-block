@@ -33,13 +33,15 @@
     "showChevron": {
       "type": "boolean",
       "default": true
+    },
+    "triggerOn": {
+      "type": "string",
+      "default": "click"
     }
   },
   "supports": {
     "html": false,
     "interactivity": true,
-    "renaming": false,
-    "reusable": false,
     "typography": {
       "fontSize": true,
       "lineHeight": true,

@@ -11,18 +11,20 @@
  */
 
 $disable_when_collapsed = $attributes['disableWhenCollapsed'] ?? false;
-$label                  = esc_html( $attributes['label'] ?? '' );
+$label                  = wp_kses_post( $attributes['label'] ?? '' );
 $menu_slug              = esc_attr( $attributes['menuSlug'] ?? '');
 $collapsed_url          = esc_url( $attributes['collapsedUrl'] ?? '');
 $menu_mode              = esc_attr( $attributes['menuMode'] ?? 'dropdown' );
 $show_chevron           = $attributes['showChevron'] ?? true;
+$trigger_on             = esc_attr( $attributes['triggerOn'] ?? 'click' );
 
 // Don't display the mega menu link if there is no label or no menu slug.
 if ( ! $label || ! $menu_slug ) {
 	return null;	
 }
 
-$classes  = $disable_when_collapsed ? 'disable-menu-when-collapsed ' : '';
+$classes  = 'wp-block-navigation-item '; // so it will inherit styles from the Navigation Block.
+$classes .= $disable_when_collapsed ? 'disable-menu-when-collapsed ' : '';
 $classes .= $collapsed_url ? 'has-collapsed-link ' : '';
 
 $wrapper_attributes = get_block_wrapper_attributes(
@@ -40,19 +42,31 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 <li
 	<?php echo $wrapper_attributes; ?>
 	data-wp-interactive='{ "namespace": "uwd/mega-menu" }'
-	data-wp-context='{ "menuOpenedBy": {}, "isTogglingMenu": false }'
+	data-wp-context='{ "menuOpenedBy": {}, "isTogglingMenu": false, "triggerOn": "<?php echo $trigger_on; ?>" }'
 	data-wp-on--focusout="actions.handleMenuFocusout"
 	data-wp-on--keydown="actions.handleMenuKeydown"
+	<?php if ( $trigger_on === 'hover' ) : ?>data-wp-on--mouseenter="actions.handleMenuMouseenter"
+	data-wp-on--mouseleave="actions.handleMenuMouseleave"<?php endif; ?>
 	data-wp-watch="callbacks.initMenu"
 >
+	<?php if ( $trigger_on === 'hover' && $collapsed_url ) : ?>
+	<a
+		href="<?php echo $collapsed_url; ?>"
+		class="wp-block-uwd-mega-menu__toggle"
+		data-wp-bind--aria-expanded="state.isMenuOpen"
+	>
+		<?php echo $label; ?><?php if ( $show_chevron ) : ?><span class="wp-block-uwd-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span><?php endif; ?>
+	</a>
+	<?php else : ?>
 	<button
 		class="wp-block-uwd-mega-menu__toggle"
 		data-wp-on--mousedown="actions.handleToggleMousedown"
-		data-wp-on--click="actions.toggleMenuOnClick"
+		<?php if ( $trigger_on === 'click' ) : ?>data-wp-on--click="actions.toggleMenuOnClick"<?php endif; ?>
 		data-wp-bind--aria-expanded="state.isMenuOpen"
 	>
 		<?php echo $label; ?><?php if ( $show_chevron ) : ?><span class="wp-block-uwd-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span><?php endif; ?>
 	</button>
+	<?php endif; ?>
 
 	<div
 		class="<?php echo $menu_classes; ?>"
