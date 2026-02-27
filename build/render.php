@@ -15,6 +15,7 @@ $label                  = esc_html( $attributes['label'] ?? '' );
 $menu_slug              = esc_attr( $attributes['menuSlug'] ?? '');
 $collapsed_url          = esc_url( $attributes['collapsedUrl'] ?? '');
 $menu_mode              = esc_attr( $attributes['menuMode'] ?? 'dropdown' );
+$show_chevron           = $attributes['showChevron'] ?? true;
 
 // Don't display the mega menu link if there is no label or no menu slug.
 if ( ! $label || ! $menu_slug ) {
@@ -50,7 +51,7 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 		data-wp-on--click="actions.toggleMenuOnClick"
 		data-wp-bind--aria-expanded="state.isMenuOpen"
 	>
-		<?php echo $label; ?><span class="wp-block-uwd-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span>
+		<?php echo $label; ?><?php if ( $show_chevron ) : ?><span class="wp-block-uwd-mega-menu__toggle-icon"><?php echo $toggle_icon; ?></span><?php endif; ?>
 	</button>
 
 	<div

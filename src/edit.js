@@ -55,6 +55,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		disableWhenCollapsed,
 		collapsedUrl,
 		menuMode,
+		showChevron,
 	} = attributes;
 
 	// Get the URL for the patterns screen in the Site Editor.
@@ -238,9 +239,16 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) => setAttributes( { menuMode: value } ) }
 					>
 						<ToggleGroupControlOption value="dropdown" label="Dropdown" />
-						<ToggleGroupControlOption value="slide-in-right" label="Slide-in Right" />
 						<ToggleGroupControlOption value="slide-in-left" label="Slide-in Left" />
+						<ToggleGroupControlOption value="slide-in-right" label="Slide-in Right" />
 					</ToggleGroupControl>
+				<ToggleControl
+					label={ __( 'Show chevron', 'mega-menu-block' ) }
+					checked={ showChevron }
+					onChange={ () =>
+						setAttributes( { showChevron: ! showChevron } )
+					}
+				/>
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
@@ -266,6 +274,8 @@ export default function Edit( { attributes, setAttributes } ) {
 							'core/strikethrough',
 						] }
 					/>
+					
+					{ showChevron && (
 					<span className="wp-block-uwd-mega-menu__toggle-icon">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -282,6 +292,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							></path>
 						</svg>
 					</span>
+					) }
 	
 				</button>
 			</div>

@@ -27,6 +27,10 @@
 		"menuMode": {
 			"type": "string",
 			"default": "dropdown"
+		},
+		"showChevron": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"supports": {
