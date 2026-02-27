@@ -31,27 +31,3 @@ function outermost_mega_menu_block_init() {
 }
 add_action( 'init', 'outermost_mega_menu_block_init' );
 
-/**
- * Adds a custom template part area for mega menus to the list of template part areas.
- *
- * This function introduces a new area specifically for menu templates, allowing
- * the creation of sections within a mega menu. The new area is appended to the 
- * existing list of template part areas.
- * 
- * @see https://developer.wordpress.org/reference/hooks/default_wp_template_part_areas/
- *
- * @param array $areas Existing array of template part areas.
- * @return array Modified array of template part areas including the new mega menu area.
- */
-function outermost_mega_menu_template_part_areas( array $areas ) {
-	$areas[] = array(
-		'area'        => 'menu',
-		'area_tag'    => 'div',
-		'description' => __( 'Menu templates are used to create sections of a mega menu.', 'mega-menu-block' ),
-		'icon' 		  => 'layout',
-		'label'       => __( 'Menu', 'mega-menu-block' ),
-	);
-
-	return $areas;
-}
-add_filter( 'default_wp_template_part_areas', 'outermost_mega_menu_template_part_areas' );

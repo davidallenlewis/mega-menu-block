@@ -7,7 +7,6 @@ import {
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { useEntityRecords } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 import { createInterpolateElement } from '@wordpress/element';
 import {
@@ -59,12 +58,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		menuMode,
 	} = attributes;
 
-	// Get the Url for the template part screen in the Site Editor.
-	const siteUrl = useSelect( ( select ) => select( 'core' ).getSite()?.url );
-	const menuTemplateUrl = siteUrl
-		? siteUrl +
-		  '/wp-admin/site-editor.php?postType=wp_template_part&categoryId=menu'
-		: '';
+	// Get the URL for the patterns screen in the Site Editor.
+	// Use window.location.origin so the protocol always matches the current page
+	// (avoids http:// links when the site is accessed over https://).
+	const menuPatternUrl =
+		window.location.origin +
+		'/wp-admin/site-editor.php?postType=wp_block&categoryId=mega-menu';
 
 	// Get the layout settings.
 	const layout = useSelect(
@@ -73,28 +72,24 @@ export default function Edit( { attributes, setAttributes } ) {
 				?.layout
 	);
 
-	// Fetch all template parts. The 'menu' area is registered by this plugin but
-	// file-based theme template parts don't carry area metadata unless declared in
-	// theme.json, so we fetch everything and let the user pick.
-	const { hasResolved, records } = useEntityRecords(
-		'postType',
-		'wp_template_part',
-		{ per_page: -1 }
+	// Fetch registered block patterns in the mega-menu category.
+	const patterns = useSelect(
+		( select ) => select( 'core' ).getBlockPatterns(),
+		[]
 	);
 
-	const knownSystemAreas = [ 'header', 'footer', 'notices' ];
-
-	const menuOptions =
-		hasResolved && records
-			? records
-				.filter(
-					( item ) => ! knownSystemAreas.includes( item.area )
-				)
-				.map( ( item ) => ( {
-					label: item.title.rendered,
-					value: item.slug,
-				} ) )
-			: [];
+	const menuOptions = patterns
+		? patterns
+			.filter(
+				( item ) =>
+					item.categories &&
+					item.categories.includes( 'mega-menu' )
+			)
+			.map( ( item ) => ( {
+				label: item.title,
+				value: item.name,
+			} ) )
+		: [];
 
 	const hasMenus = menuOptions.length > 0;
 	const selectedMenuAndExists = menuSlug
@@ -106,13 +101,13 @@ export default function Edit( { attributes, setAttributes } ) {
 		<Notice status="warning" isDismissible={ false }>
 			{ createInterpolateElement(
 				__(
-					'No menu templates could be found. Create a new one in the <a>Site Editor</a>.',
+					'No mega menu Patterns could be found. Create a new one in the <a>Site Editor</a>.',
 					'mega-menu-block'
 				),
 				{
 					a: (
 						<a // eslint-disable-line
-							href={ menuTemplateUrl }
+								href={ menuPatternUrl }
 							target="_blank"
 							rel="noreferrer"
 						/>
@@ -122,11 +117,11 @@ export default function Edit( { attributes, setAttributes } ) {
 		</Notice>
 	);
 
-	// Notice for when the selected menu template no longer exists.
+	// Notice for when the selected menu pattern no longer exists.
 	const menuDoesntExistNotice = (
 		<Notice status="warning" isDismissible={ false }>
 			{ __(
-				'The selected menu template no longer exists. Choose another.',
+				'The selected mega menu Pattern no longer exists. Choose another.',
 				'mega-menu-block'
 			) }
 		</Notice>
@@ -137,50 +132,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		className:
 			'wp-block-navigation-item wp-block-uwd-mega-menu__toggle',
 	} );
-
-	const justificationOptions = [
-		{
-			value: 'left',
-			icon: justifyLeft,
-			label: __( 'Justify menu left', 'mega-menu-block' ),
-		},
-		{
-			value: 'center',
-			icon: justifyCenter,
-			label: __( 'Justify menu center', 'mega-menu-block' ),
-		},
-		{
-			value: 'right',
-			icon: justifyRight,
-			label: __( 'Justify menu right', 'mega-menu-block' ),
-		},
-	];
-
-	const widthOptions = [
-		{
-			value: 'content',
-			icon: alignNone,
-			label: sprintf(
-				// translators: %s: container size (i.e. 600px etc)
-				__( 'Content width (%s wide)', 'mega-menu-block' ),
-				layout.contentSize
-			),
-		},
-		{
-			value: 'wide',
-			icon: stretchWide,
-			label: sprintf(
-				// translators: %s: container size (i.e. 600px etc)
-				__( 'Wide width (%s wide)', 'mega-menu-block' ),
-				layout.wideSize
-			),
-		},
-		{
-			value: 'full',
-			icon: stretchFullWidth,
-			label: __( 'Full width', 'mega-menu-block' ),
-		},
-	];
 
 	return (
 		<>
@@ -200,7 +151,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						autoComplete="off"
 					/>
 					<ComboboxControl
-						label={ __( 'Menu Template', 'mega-menu-block' ) }
+						label={ __( 'Menu Pattern', 'mega-menu-block' ) }
 						value={ menuSlug }
 						options={ menuOptions }
 						onChange={ ( value ) =>
@@ -210,13 +161,13 @@ export default function Edit( { attributes, setAttributes } ) {
 							hasMenus &&
 							createInterpolateElement(
 								__(
-									'Create and modify menu templates in the <a>Site Editor</a>.',
+									'Create and modify mega menu Patterns in the <a>Site Editor</a>.',
 									'mega-menu-block'
 								),
 								{
 									a: (
 									<a // eslint-disable-line
-											href={ menuTemplateUrl }
+											href={ menuPatternUrl }
 											target="_blank"
 											rel="noreferrer"
 										/>
