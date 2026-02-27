@@ -73,26 +73,28 @@ export default function Edit( { attributes, setAttributes } ) {
 				?.layout
 	);
 
-	// Fetch all template parts.
+	// Fetch all template parts. The 'menu' area is registered by this plugin but
+	// file-based theme template parts don't carry area metadata unless declared in
+	// theme.json, so we fetch everything and let the user pick.
 	const { hasResolved, records } = useEntityRecords(
 		'postType',
 		'wp_template_part',
-		{
-			per_page: -1,
-		}
+		{ per_page: -1 }
 	);
 
-	let menuOptions = [];
+	const knownSystemAreas = [ 'header', 'footer', 'notices' ];
 
-	// Filter the template parts for those in the 'menu' area.
-	if ( hasResolved ) {
-		menuOptions = records
-			.filter( ( item ) => item.area === 'menu' )
-			.map( ( item ) => ( {
-				label: item.title.rendered,
-				value: item.slug,
-			} ) );
-	}
+	const menuOptions =
+		hasResolved && records
+			? records
+				.filter(
+					( item ) => ! knownSystemAreas.includes( item.area )
+				)
+				.map( ( item ) => ( {
+					label: item.title.rendered,
+					value: item.slug,
+				} ) )
+			: [];
 
 	const hasMenus = menuOptions.length > 0;
 	const selectedMenuAndExists = menuSlug

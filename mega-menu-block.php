@@ -22,6 +22,12 @@
  */
 function outermost_mega_menu_block_init() {
 	register_block_type( __DIR__ . '/build' );
+
+	// Register the pattern category used to tag mega menu content patterns.
+	register_block_pattern_category(
+		'mega-menu',
+		array( 'label' => __( 'Mega Menus', 'mega-menu-block' ) )
+	);
 }
 add_action( 'init', 'outermost_mega_menu_block_init' );
 

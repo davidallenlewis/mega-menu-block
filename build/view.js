@@ -103,11 +103,16 @@ const {
         actions.closeMenu('focus');
       } else {
         context.previousFocus = ref;
-        // Store the toggle's bottom position so slide-in panels can
-        // use position:fixed but still start below the toggle button.
         const li = ref.closest('.wp-block-uwd-mega-menu');
         if (li) {
-          li.style.setProperty('--slide-in-top', `${ref.getBoundingClientRect().bottom + 20}px`);
+          // Calculate the left offset so that translateX(-50%) centers
+          // the dropdown on the viewport, regardless of the li's position.
+          // --dropdown-left = (viewport center) - (li's left edge in viewport)
+          const liLeft = li.getBoundingClientRect().left;
+          const cssLeft = document.documentElement.clientWidth / 2 - liLeft;
+          li.style.setProperty('--dropdown-left', `${cssLeft}px`);
+          const rect = ref.getBoundingClientRect();
+          li.style.setProperty('--slide-in-top', `${rect.bottom + 20}px`);
         }
         actions.openMenu('click');
       }

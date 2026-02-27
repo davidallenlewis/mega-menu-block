@@ -57,7 +57,7 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 		class="<?php echo $menu_classes; ?>"
 		tabindex="-1"
 	>
-		<?php echo block_template_part( $menu_slug ); ?>
+		<?php echo block_template_part( $menu_slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		<button 
 			aria-label="<?php echo __( 'Close menu', 'mega-menu' ); ?>" 
 			class="menu-container__close-button" 

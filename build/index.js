@@ -263,22 +263,20 @@ function Edit({
   // Get the layout settings.
   const layout = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_4__.useSelect)(select => select('core/editor').getEditorSettings()?.__experimentalFeatures?.layout);
 
-  // Fetch all template parts.
+  // Fetch all template parts. The 'menu' area is registered by this plugin but
+  // file-based theme template parts don't carry area metadata unless declared in
+  // theme.json, so we fetch everything and let the user pick.
   const {
     hasResolved,
     records
   } = (0,_wordpress_core_data__WEBPACK_IMPORTED_MODULE_3__.useEntityRecords)('postType', 'wp_template_part', {
     per_page: -1
   });
-  let menuOptions = [];
-
-  // Filter the template parts for those in the 'menu' area.
-  if (hasResolved) {
-    menuOptions = records.filter(item => item.area === 'menu').map(item => ({
-      label: item.title.rendered,
-      value: item.slug
-    }));
-  }
+  const knownSystemAreas = ['header', 'footer', 'notices'];
+  const menuOptions = hasResolved && records ? records.filter(item => !knownSystemAreas.includes(item.area)).map(item => ({
+    label: item.title.rendered,
+    value: item.slug
+  })) : [];
   const hasMenus = menuOptions.length > 0;
   const selectedMenuAndExists = menuSlug ? menuOptions.some(option => option.value === menuSlug) : true;
 

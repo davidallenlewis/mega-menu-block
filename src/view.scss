@@ -1,17 +1,16 @@
 // Front-end specific styles.
 .wp-block-uwd-mega-menu {
 	$self: &;
-
 	&__menu-container {
 		visibility: hidden;
-		z-index: 99999;
-
 		&.mode-is-dropdown {
 			left: 0;
+			overflow: hidden;
 			opacity: 0;
 			position: absolute;
-			top: 100%;
+			top: calc(100% + 20px);
 			transition: opacity .1s linear, visibility .1s linear;
+			width: 0;
 		}
 
 		&.mode-is-slide-in-right {
@@ -27,15 +26,19 @@
 
 	&__toggle[aria-expanded="true"] {
 		~ #{$self}__menu-container.mode-is-dropdown {
+			left: var(--dropdown-left, 50vw);
 			opacity: 1;
+			overflow: visible;
+			transform: translateX(-50%);
 			visibility: visible;
-			width: 100vw;
-			max-width: var(--wp--global--wide-size);
+			width: min(100vw, var(--wp--style--global--wide-size));
+			z-index: 99999;
 		}
 
 		~ #{$self}__menu-container.mode-is-slide-in-right {
 			transform: translateX(0);
 			visibility: visible;
+			z-index: 99999;
 		}
 	}
 }
@@ -46,7 +49,7 @@
 		align-items: center;
 		background-color: transparent;
 		border: none;
-		border-radius: 999999px;
+		border-radius: 99999px;
 		cursor: pointer;
 		display: flex;
 		justify-content: center;
@@ -56,7 +59,6 @@
 		text-align: center;
 		top: 12px;
 		transition: opacity .2s ease;
-		z-index: 100;
 	}
 
 	// This ensures navigation menu inside of mega menus display correctly.

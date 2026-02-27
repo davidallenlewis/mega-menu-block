@@ -2,7 +2,6 @@
 .wp-block-uwd-mega-menu {
     $self: &;
     position: relative;
-    z-index: 99999;
     &__toggle {
         background-color: initial;
         border: none;
