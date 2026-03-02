@@ -17,23 +17,14 @@
 		
 		// Menu Modes
 		&.mode-is-dropdown {
-			left: 0;
+			left: var(--dropdown-left, 50vw);
 			overflow: hidden;
 			position: absolute;
 			top: calc(100% + 20px);
-			transform: translateX(-50%);
-			width: 0;
-			// Invisible bridge that fills the 20px gap between the toggle and the
-			// menu. The mouse stays over a descendant of the <li> while crossing
-			// the gap, so mouseleave never fires and the menu stays open.
-			&::before {
-				content: '';
-				position: absolute;
-				top: -20px;
-				left: 0;
-				right: 0;
-				height: 20px;
-			}
+			transform: translateX(-50%) scaleY(0);
+			transform-origin: top center;
+			width: min(100vw, var(--wp--style--global--wide-size));
+			z-index: 99999;
 		}
 		&.mode-is-slide-in-left, &.mode-is-slide-in-right {
 			height: calc(100vh - var(--slide-in-top, 0px));
@@ -74,10 +65,7 @@
 			z-index: 99999;
 		}
 		~ #{$self}__menu-container.mode-is-dropdown {
-			left: var(--dropdown-left, 50vw);
-			overflow: visible;
-			width: min(100vw, var(--wp--style--global--wide-size));
-			transform: translateX(-50%);
+			transform: translateX(-50%) scaleY(1);
 		}
 		~ #{$self}__menu-container.mode-is-slide-in-right {
 			transform: translateX(0);

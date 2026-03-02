@@ -33,10 +33,6 @@
     "showChevron": {
       "type": "boolean",
       "default": true
-    },
-    "triggerOn": {
-      "type": "string",
-      "default": "click"
     }
   },
   "supports": {
