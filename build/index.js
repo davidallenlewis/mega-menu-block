@@ -77,10 +77,39 @@ function Edit({
 
   // Fetch registered block patterns in the mega-menu category.
   const patterns = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useSelect)(select => select('core').getBlockPatterns(), []);
-  const menuOptions = patterns ? patterns.filter(item => item.categories && item.categories.includes('mega-menu')).map(item => ({
+
+  // Fetch the ID of the 'mega-menu' wp_pattern_category term so we can
+  // query user-created (database-saved) patterns assigned to it.
+  const megaMenuCategoryId = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useSelect)(select => {
+    var _cats$0$id;
+    const cats = select('core').getEntityRecords('taxonomy', 'wp_pattern_category', {
+      slug: 'mega-menu',
+      per_page: 1
+    });
+    return (_cats$0$id = cats?.[0]?.id) !== null && _cats$0$id !== void 0 ? _cats$0$id : null;
+  }, []);
+
+  // Fetch user-created wp_block posts in the mega-menu category.
+  const userPatterns = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useSelect)(select => {
+    if (megaMenuCategoryId === null) return null;
+    return select('core').getEntityRecords('postType', 'wp_block', {
+      wp_pattern_category: megaMenuCategoryId,
+      per_page: -1,
+      status: 'publish'
+    });
+  }, [megaMenuCategoryId]);
+  const registeredMenuOptions = patterns ? patterns.filter(item => item.categories && item.categories.some(cat => cat === 'mega-menu' || typeof cat === 'object' && cat?.slug === 'mega-menu')).map(item => ({
     label: item.title,
     value: item.name
   })) : [];
+  const userMenuOptions = userPatterns ? userPatterns.map(item => {
+    var _item$title$raw;
+    return {
+      label: (_item$title$raw = item.title?.raw) !== null && _item$title$raw !== void 0 ? _item$title$raw : item.slug,
+      value: `wp_block:${item.slug}`
+    };
+  }) : [];
+  const menuOptions = [...registeredMenuOptions, ...userMenuOptions];
   const hasMenus = menuOptions.length > 0;
   const selectedMenuAndExists = menuSlug ? menuOptions.some(option => option.value === menuSlug) : true;
 

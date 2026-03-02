@@ -78,18 +78,55 @@ export default function Edit( { attributes, setAttributes } ) {
 		[]
 	);
 
-	const menuOptions = patterns
+	// Fetch the ID of the 'mega-menu' wp_pattern_category term so we can
+	// query user-created (database-saved) patterns assigned to it.
+	const megaMenuCategoryId = useSelect( ( select ) => {
+		const cats = select( 'core' ).getEntityRecords(
+			'taxonomy',
+			'wp_pattern_category',
+			{ slug: 'mega-menu', per_page: 1 }
+		);
+		return cats?.[ 0 ]?.id ?? null;
+	}, [] );
+
+	// Fetch user-created wp_block posts in the mega-menu category.
+	const userPatterns = useSelect(
+		( select ) => {
+			if ( megaMenuCategoryId === null ) return null;
+			return select( 'core' ).getEntityRecords( 'postType', 'wp_block', {
+				wp_pattern_category: megaMenuCategoryId,
+				per_page: -1,
+				status: 'publish',
+			} );
+		},
+		[ megaMenuCategoryId ]
+	);
+
+	const registeredMenuOptions = patterns
 		? patterns
 			.filter(
 				( item ) =>
 					item.categories &&
-					item.categories.includes( 'mega-menu' )
+					item.categories.some(
+						( cat ) =>
+							cat === 'mega-menu' ||
+							( typeof cat === 'object' && cat?.slug === 'mega-menu' )
+					)
 			)
 			.map( ( item ) => ( {
 				label: item.title,
 				value: item.name,
 			} ) )
 		: [];
+
+	const userMenuOptions = userPatterns
+		? userPatterns.map( ( item ) => ( {
+			label: item.title?.raw ?? item.slug,
+			value: `wp_block:${ item.slug }`,
+		} ) )
+		: [];
+
+	const menuOptions = [ ...registeredMenuOptions, ...userMenuOptions ];
 
 	const hasMenus = menuOptions.length > 0;
 	const selectedMenuAndExists = menuSlug
@@ -107,7 +144,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				{
 					a: (
 						<a // eslint-disable-line
-								href={ menuPatternUrl }
+							href={ menuPatternUrl }
 							target="_blank"
 							rel="noreferrer"
 						/>

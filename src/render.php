@@ -63,6 +63,18 @@ $toggle_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" widt
 		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( $menu_slug );
 		if ( $pattern ) {
 			echo do_blocks( $pattern['content'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( str_starts_with( $menu_slug, 'wp_block:' ) ) {
+			// User-created pattern stored as a wp_block post.
+			$post_slug = substr( $menu_slug, strlen( 'wp_block:' ) );
+			$posts     = get_posts( array(
+				'post_type'      => 'wp_block',
+				'name'           => $post_slug,
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+			) );
+			if ( $posts ) {
+				echo do_blocks( $posts[0]->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
 		}
 		?>
 		<button 
