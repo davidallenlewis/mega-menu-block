@@ -14,6 +14,12 @@
 		line-height: initial;
 		text-decoration: initial;
 		text-transform: initial;
+		ul {
+			padding-left: var(--wp--preset--spacing--medium) !important;
+			li {
+				list-style: initial !important;
+			}
+		}
 		
 		// Menu Modes
 		&.mode-is-dropdown {
@@ -23,7 +29,7 @@
 			top: calc(100% + 20px);
 			transform: translateX(-50%) scaleY(0);
 			transform-origin: top center;
-			width: min(100vw, var(--wp--style--global--wide-size));
+			width: min( calc( 100vw - var(--wp--preset--spacing--medium) - var(--wp--preset--spacing--medium) ), var(--wp--style--global--wide-size) );
 			z-index: 99999;
 		}
 		&.mode-is-slide-in-left, &.mode-is-slide-in-right {
