@@ -13,11 +13,11 @@
   text-decoration: initial;
   text-transform: initial;
 }
-.wp-block-uwd-mega-menu__menu-container ul {
+.wp-block-uwd-mega-menu__menu-container ul:not(.wp-block-post-template) {
   padding-left: var(--wp--preset--spacing--medium) !important;
 }
-.wp-block-uwd-mega-menu__menu-container ul li {
-  list-style: initial !important;
+.wp-block-uwd-mega-menu__menu-container ul:not(.wp-block-post-template) li {
+  list-style: initial;
 }
 .wp-block-uwd-mega-menu__menu-container.mode-is-dropdown {
   left: var(--dropdown-left, 50vw);

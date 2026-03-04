@@ -14,10 +14,11 @@
 		line-height: initial;
 		text-decoration: initial;
 		text-transform: initial;
-		ul {
+		
+		ul:not(.wp-block-post-template) {
 			padding-left: var(--wp--preset--spacing--medium) !important;
 			li {
-				list-style: initial !important;
+				list-style: initial;
 			}
 		}
 		
