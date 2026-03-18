@@ -1,85 +1,70 @@
 // Front-end specific styles.
-.wp-block-uwd-mega-menu {
-	$self: &;
-	&__menu-container {
-		visibility: hidden;
-		opacity: 0;
-		transition: transform .3s ease, visibility .3s ease, opacity .3s ease;
-		
-		// Prevent Mega Menu from inheriting styles from Navigation Block.
-		color: initial;
-		font-weight: initial;
-		font-size: initial;
-		letter-spacing: initial;
-		line-height: initial;
-		text-decoration: initial;
-		text-transform: initial;
-		
-		ul:not(.wp-block-post-template) {
-			padding-left: var(--wp--preset--spacing--medium) !important;
-			li {
-				list-style: initial;
-			}
-		}
-		
-		// Menu Modes
-		&.mode-is-dropdown {
-			left: var(--dropdown-left, 50vw);
-			overflow: hidden;
-			position: absolute;
-			top: calc(100% + 20px);
-			transform: translateX(-50%) scaleY(0);
-			transform-origin: top center;
-			width: min( calc( 100vw - var(--wp--preset--spacing--medium) - var(--wp--preset--spacing--medium) ), var(--wp--style--global--wide-size) );
-			z-index: 99999;
-		}
-		&.mode-is-slide-in-left, &.mode-is-slide-in-right {
-			height: calc(100vh - var(--slide-in-top, 0px));
-			overflow-y: auto;
-			position: fixed;
-			top: var(--slide-in-top, 0px);
-		}
-		&.mode-is-slide-in-right {
-			right: 0;
-			transform: translateX(100%);
-		}
-		&.mode-is-slide-in-left {
-			left: 0;
-			transform: translateX(-100%);
-		}
-		
-		// Close Button
-		.menu-container__close-button {
-			position: absolute;
-			right: 12px;
-			top: 12px;
-			background-color: transparent;
-			border: none;
-			cursor: pointer;
-		}
-		
-		// Ensures nav menu inside mega menus display correctly.
-		.is-responsive {
-			display: flex;
-		}
+
+// The __menu-container is portaled to <body> at runtime (see view.js),
+// so these rules target it by class name alone — no nav descendant context.
+.wp-block-uwd-mega-menu__menu-container {
+	visibility: hidden;
+	opacity: 0;
+	transition: transform .3s ease, visibility .3s ease, opacity .3s ease;
+
+	// Menu Modes
+	&.mode-is-dropdown {
+		left: 50%;
+		overflow: hidden;
+		position: fixed;
+		top: 0; // overridden per-instance by JS
+		transform: translateX(-50%) scaleY(0);
+		transform-origin: top center;
+		width: min( calc( 100vw - var(--wp--preset--spacing--medium) - var(--wp--preset--spacing--medium) ), var(--wp--style--global--wide-size) );
+		z-index: 99999;
 	}
-	
-	// Show the mega menu when toggle is active.
-	&__toggle[aria-expanded="true"] {
-		~ #{$self}__menu-container {
-			visibility: visible;
-			opacity: 1;
-			z-index: 99999;
-		}
-		~ #{$self}__menu-container.mode-is-dropdown {
-			transform: translateX(-50%) scaleY(1);
-		}
-		~ #{$self}__menu-container.mode-is-slide-in-right {
-			transform: translateX(0);
-		}
-		~ #{$self}__menu-container.mode-is-slide-in-left {
-			transform: translateX(0);
-		}
+	&.mode-is-slide-in-left,
+	&.mode-is-slide-in-right {
+		height: calc(100vh - var(--slide-in-top, 0px));
+		overflow-y: auto;
+		position: fixed;
+		top: var(--slide-in-top, 0px);
+	}
+	&.mode-is-slide-in-right {
+		right: 0;
+		transform: translateX(100%);
+	}
+	&.mode-is-slide-in-left {
+		left: 0;
+		transform: translateX(-100%);
+	}
+
+	// Close Button
+	.menu-container__close-button {
+		position: absolute;
+		right: 12px;
+		top: 12px;
+		background-color: transparent;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Open state — toggled via JS class instead of CSS sibling combinator.
+	&.is-open {
+		visibility: visible;
+		opacity: 1;
+		z-index: 99999;
+	}
+	&.is-open.mode-is-dropdown {
+		transform: translateX(-50%) scaleY(1);
+	}
+	&.is-open.mode-is-slide-in-right {
+		transform: translateX(0);
+	}
+	&.is-open.mode-is-slide-in-left {
+		transform: translateX(0);
+	}
+}
+
+.wp-block-uwd-mega-menu {
+	// Ensures nav menu inside mega menus display correctly.
+	.is-responsive {
+		display: flex;
 	}
 }
 
@@ -98,10 +83,13 @@ html.has-modal-open {
 			.wp-block-uwd-mega-menu__collapsed-link {
 				display: inherit;
 			}
-			.wp-block-uwd-mega-menu__toggle, 
-			.wp-block-uwd-mega-menu__menu-container {
+			.wp-block-uwd-mega-menu__toggle {
 				display: none;
 			}
 		}
+	}
+	// Also hide the portaled container (now on body, not inside the <li>).
+	.wp-block-uwd-mega-menu__menu-container {
+		display: none;
 	}
 }

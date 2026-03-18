@@ -37,20 +37,6 @@ const { state, actions } = store( 'uwd/mega-menu', {
 				actions.closeMenu( 'focus' );
 			} else {
 				context.previousFocus = ref;
-
-				const li = ref.closest( '.wp-block-uwd-mega-menu' );
-				if ( li ) {
-					// Calculate the left offset so that translateX(-50%) centers
-					// the dropdown on the viewport, regardless of the li's position.
-					// --dropdown-left = (viewport center) - (li's left edge in viewport)
-					const liLeft = li.getBoundingClientRect().left;
-					const cssLeft = ( document.documentElement.clientWidth / 2 ) - liLeft;
-					li.style.setProperty( '--dropdown-left', `${ cssLeft }px` );
-
-					const rect = ref.getBoundingClientRect();
-					li.style.setProperty( '--slide-in-top', `${ rect.bottom + 20 }px` );
-				}
-
 				actions.openMenu( 'click' );
 			}
 		},
@@ -69,28 +55,20 @@ const { state, actions } = store( 'uwd/mega-menu', {
 		},
 		handleMenuFocusout( event ) {
 			const context = getContext();
-			const menuContainer = context.megaMenu?.querySelector(
-				'.wp-block-uwd-mega-menu__menu-container'
-			);
-			// If focus is outside menu, and in the document, close menu
-			// event.target === The element losing focus
-			// event.relatedTarget === The element receiving focus (if any)
-			// When focusout is outside the document,
-			// `window.document.activeElement` doesn't change.
 
 			// If the toggle button is being clicked (tracked via mousedown), skip
 			// closing here — toggleMenuOnClick will handle it. This fixes a Safari
 			// bug where relatedTarget is always null on click, which previously
 			// caused focusout to close the menu before the click reopened it.
-			if ( context.isTogglingMenu ) {
-				return;
-			}
+			if ( context.isTogglingMenu ) return;
+
+			// Focus moving into the portaled container is not a reason to close.
+			if ( context.menuContainer?.contains( event.relatedTarget ) ) return;
 
 			// The event.relatedTarget is null when something outside the navigation menu is clicked. This is only necessary for Safari.
 			if (
 				event.relatedTarget === null ||
-				( ! menuContainer?.contains( event.relatedTarget ) &&
-					event.target !== window.document.activeElement )
+				event.target !== window.document.activeElement
 			) {
 				actions.closeMenu( 'click' );
 				actions.closeMenu( 'focus' );
@@ -106,6 +84,7 @@ const { state, actions } = store( 'uwd/mega-menu', {
 			// Reset the menu reference and button focus when closed.
 			if ( ! state.isMenuOpen ) {
 				if (
+					context.menuContainer?.contains( window.document.activeElement ) ||
 					context.megaMenu?.contains( window.document.activeElement )
 				) {
 					context.previousFocus?.focus();
@@ -118,11 +97,79 @@ const { state, actions } = store( 'uwd/mega-menu', {
 	callbacks: {
 		initMenu() {
 			const context = getContext();
-			const { ref } = getElement();
+			const { ref } = getElement(); // ref = the <li>
 
-			// Set the menu reference when initialized.
+			// Portal the __menu-container to <body> once on first run.
+			// This removes it from the <nav> DOM tree so no navigation-block
+			// descendant selectors or inherited styles can reach it.
+			if ( ! context.menuContainer ) {
+				const container = ref.querySelector(
+					'.wp-block-uwd-mega-menu__menu-container'
+				);
+				if ( container ) {
+					// Wire up the close button with a plain listener since it will
+					// no longer be inside the Interactivity API context chain.
+					const closeBtn = container.querySelector(
+						'.menu-container__close-button'
+					);
+					if ( closeBtn ) {
+						closeBtn.removeAttribute( 'data-wp-on--click' );
+						closeBtn.addEventListener( 'click', () => {
+							context.menuOpenedBy.click = false;
+							context.menuOpenedBy.focus = false;
+						} );
+					}
+
+					// Close when focus leaves the portaled container and doesn't
+					// return to the <li> toggle.
+					container.addEventListener( 'focusout', ( event ) => {
+						if ( context.isTogglingMenu ) return;
+						if ( ref.contains( event.relatedTarget ) ) return;
+						if ( container.contains( event.relatedTarget ) ) return;
+						context.menuOpenedBy.click = false;
+						context.menuOpenedBy.focus = false;
+					} );
+
+					document.body.appendChild( container );
+					context.menuContainer = container;
+				}
+			}
+
+			// Sync open/closed state and position to the portaled container.
+			const container = context.menuContainer;
+			if ( ! container ) return;
+
 			if ( state.isMenuOpen ) {
 				context.megaMenu = ref;
+
+				const toggle = ref.querySelector( '.wp-block-uwd-mega-menu__toggle' );
+
+				// Reposition the container relative to the toggle's current viewport rect.
+				// Called on open and on every scroll/resize so it tracks the toggle
+				// even when the nav scrolls with the page.
+				const reposition = () => {
+					if ( ! toggle ) return;
+					const rect = toggle.getBoundingClientRect();
+					container.style.top = `${ rect.bottom + 20 }px`;
+					container.style.setProperty( '--slide-in-top', `${ rect.bottom }px` );
+				};
+
+				reposition();
+
+				// Store the handler so we can remove it when the menu closes.
+				context._reposition = reposition;
+				window.addEventListener( 'scroll', reposition, { passive: true } );
+				window.addEventListener( 'resize', reposition, { passive: true } );
+
+				container.classList.add( 'is-open' );
+			} else {
+				// Remove scroll/resize listeners when closed.
+				if ( context._reposition ) {
+					window.removeEventListener( 'scroll', context._reposition );
+					window.removeEventListener( 'resize', context._reposition );
+					context._reposition = null;
+				}
+				container.classList.remove( 'is-open' );
 			}
 		},
 	},
