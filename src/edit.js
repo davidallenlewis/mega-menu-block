@@ -78,29 +78,25 @@ export default function Edit( { attributes, setAttributes } ) {
 		[]
 	);
 
-	// Fetch the ID of the 'mega-menu' wp_pattern_category term so we can
-	// query user-created (database-saved) patterns assigned to it.
-	const megaMenuCategoryId = useSelect( ( select ) => {
-		const cats = select( 'core' ).getEntityRecords(
-			'taxonomy',
-			'wp_pattern_category',
-			{ slug: 'mega-menu', per_page: 1 }
-		);
-		return cats?.[ 0 ]?.id ?? null;
+	// Fetch user-created wp_block posts with embedded term data so we can
+	// filter client-side by the 'mega-menu' wp_pattern_category slug without
+	// needing a separate two-step category-ID lookup.
+	const userPatterns = useSelect( ( select ) => {
+		const posts = select( 'core' ).getEntityRecords( 'postType', 'wp_block', {
+			per_page: -1,
+			status: 'publish',
+			_embed: 'wp:term',
+		} );
+		if ( ! posts ) return null;
+		return posts.filter( ( post ) => {
+			const terms = post._embedded?.[ 'wp:term' ]?.flat() ?? [];
+			return terms.some(
+				( term ) =>
+					term.taxonomy === 'wp_pattern_category' &&
+					term.slug === 'mega-menu'
+			);
+		} );
 	}, [] );
-
-	// Fetch user-created wp_block posts in the mega-menu category.
-	const userPatterns = useSelect(
-		( select ) => {
-			if ( megaMenuCategoryId === null ) return null;
-			return select( 'core' ).getEntityRecords( 'postType', 'wp_block', {
-				wp_pattern_category: megaMenuCategoryId,
-				per_page: -1,
-				status: 'publish',
-			} );
-		},
-		[ megaMenuCategoryId ]
-	);
 
 	const registeredMenuOptions = patterns
 		? patterns
@@ -109,8 +105,8 @@ export default function Edit( { attributes, setAttributes } ) {
 					item.categories &&
 					item.categories.some(
 						( cat ) =>
-							cat === 'mega-menu' ||
-							( typeof cat === 'object' && cat?.slug === 'mega-menu' )
+					cat === 'mega-menu' ||
+					( typeof cat === 'object' && cat?.slug === 'mega-menu' )
 					)
 			)
 			.map( ( item ) => ( {
@@ -138,7 +134,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		<Notice status="warning" isDismissible={ false }>
 			{ createInterpolateElement(
 				__(
-					'No mega menu Patterns could be found. Create a new one in the <a>Site Editor</a>.',
+					'No Patterns could be found. Create a new one in the <a>Site Editor</a>.',
 					'mega-menu-block'
 				),
 				{
@@ -158,7 +154,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const menuDoesntExistNotice = (
 		<Notice status="warning" isDismissible={ false }>
 			{ __(
-				'The selected mega menu Pattern no longer exists. Choose another.',
+				'The selected Pattern no longer exists. Choose another.',
 				'mega-menu-block'
 			) }
 		</Notice>
@@ -198,7 +194,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							hasMenus &&
 							createInterpolateElement(
 								__(
-									'Create and modify mega menu Patterns in the <a>Site Editor</a>.',
+									'Create and modify Patterns in the <a>Site Editor</a>.',
 									'mega-menu-block'
 								),
 								{
