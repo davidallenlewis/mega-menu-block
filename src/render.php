@@ -16,15 +16,44 @@ $menu_slug              = esc_attr( $attributes['menuSlug'] ?? '');
 $collapsed_url          = esc_url( $attributes['collapsedUrl'] ?? '');
 $menu_mode              = esc_attr( $attributes['menuMode'] ?? 'dropdown' );
 $show_chevron           = $attributes['showChevron'] ?? true;
+$active_parent_page     = (int) ( $attributes['activeParentPage'] ?? 0 );
+$active_post_type       = sanitize_key( $attributes['activePostType'] ?? '' );
 
 // Don't display the mega menu link if there is no label or no menu slug.
 if ( ! $label || ! $menu_slug ) {
 	return null;	
 }
 
+// Determine whether the current request matches this menu item's active conditions.
+$is_current_item = false;
+
+if ( $active_parent_page ) {
+	$queried_object = get_queried_object();
+	if ( $queried_object instanceof WP_Post ) {
+		if ( (int) $queried_object->ID === $active_parent_page ) {
+			$is_current_item = true;
+		} else {
+			$ancestors = array_map( 'intval', get_post_ancestors( $queried_object->ID ) );
+			if ( in_array( $active_parent_page, $ancestors, true ) ) {
+				$is_current_item = true;
+			}
+		}
+	}
+}
+
+if ( ! $is_current_item && $active_post_type ) {
+	$queried_object = get_queried_object();
+	if ( $queried_object instanceof WP_Post && $queried_object->post_type === $active_post_type ) {
+		$is_current_item = true;
+	} elseif ( is_post_type_archive( $active_post_type ) ) {
+		$is_current_item = true;
+	}
+}
+
 $classes  = 'wp-block-navigation-item '; // so it will inherit styles from the Navigation Block.
 $classes .= $disable_when_collapsed ? 'disable-menu-when-collapsed ' : '';
 $classes .= $collapsed_url ? 'has-collapsed-link ' : '';
+$classes .= $is_current_item ? 'current-menu-item ' : '';
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array( 'class' => $classes )

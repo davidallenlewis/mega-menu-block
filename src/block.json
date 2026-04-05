@@ -31,6 +31,14 @@
 		"showChevron": {
 			"type": "boolean",
 			"default": true
+		},
+		"activeParentPage": {
+			"type": "integer",
+			"default": 0
+		},
+		"activePostType": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"supports": {

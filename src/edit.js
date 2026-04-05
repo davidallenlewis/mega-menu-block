@@ -20,6 +20,7 @@ import {
 	__experimentalToggleGroupControl as ToggleGroupControl, // eslint-disable-line
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon, // eslint-disable-line
+	__experimentalVStack as VStack, // eslint-disable-line
 } from '@wordpress/components';
 import {
 	alignNone,
@@ -56,6 +57,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		collapsedUrl,
 		menuMode,
 		showChevron,
+		activeParentPage,
+		activePostType,
 	} = attributes;
 
 	// Get the URL for the patterns screen in the Site Editor.
@@ -96,6 +99,42 @@ export default function Edit( { attributes, setAttributes } ) {
 					term.slug === 'mega-menu'
 			);
 		} );
+	}, [] );
+
+	// Fetch published pages for the active parent page selector.
+	const pageOptions = useSelect( ( select ) => {
+		const records = select( 'core' ).getEntityRecords( 'postType', 'page', {
+			per_page: 100,
+			status: 'publish',
+			_fields: 'id,title,slug',
+		} );
+		if ( ! records ) return [];
+		return records.map( ( page ) => ( {
+			label: page.title?.rendered ?? page.slug,
+			value: page.id,
+		} ) );
+	}, [] );
+
+	// Fetch public post types for the active post type selector.
+	const postTypeOptions = useSelect( ( select ) => {
+		const types = select( 'core' ).getPostTypes( { per_page: -1 } );
+		if ( ! types ) return [];
+		const excluded = [
+			'attachment',
+			'wp_block',
+			'wp_navigation',
+			'wp_template',
+			'wp_template_part',
+			'wp_global_styles',
+			'wp_font_family',
+			'wp_font_face',
+		];
+		return types
+			.filter( ( type ) => type.viewable && ! excluded.includes( type.slug ) )
+			.map( ( type ) => ( {
+				label: type.name,
+				value: type.slug,
+			} ) );
 	}, [] );
 
 	const registeredMenuOptions = patterns
@@ -177,7 +216,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TextControl
 						label={ __( 'Label', 'mega-menu-block' ) }
 						type="text"
-						value={ label }
+						value={ label ? label.replace( /<br\s*\/?>/gi, ' ' ).replace( /<[^>]*>/g, '' ).trim() : '' }
 						onChange={ ( value ) =>
 							setAttributes( { label: value } )
 						}
@@ -257,6 +296,31 @@ export default function Edit( { attributes, setAttributes } ) {
 							autoComplete="off"
 						/>
 					) }
+				</PanelBody>
+			</InspectorControls>
+			<InspectorControls>
+				<PanelBody
+					title={ __( 'Active State', 'mega-menu-block' ) }
+					initialOpen={ true }
+				>
+				<VStack spacing={ 4 }>
+					<ComboboxControl
+						label={ __( 'Active for parent page', 'mega-menu-block' ) }
+						value={ activeParentPage || null }
+						options={ pageOptions }
+						onChange={ ( value ) =>
+							setAttributes( { activeParentPage: value ?? 0 } )
+						}
+					/>
+					<ComboboxControl
+						label={ __( 'Active for post type', 'mega-menu-block' ) }
+						value={ activePostType || null }
+						options={ postTypeOptions }
+						onChange={ ( value ) =>
+							setAttributes( { activePostType: value ?? '' } )
+						}
+					/>
+				</VStack>
 				</PanelBody>
 			</InspectorControls>
 			<InspectorControls group="settings">
