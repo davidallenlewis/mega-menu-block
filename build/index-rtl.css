@@ -1,2 +1,91 @@
-.wp-block-uwd-mega-menu__menu-container{opacity:0;transition:transform .3s ease,visibility .3s ease,opacity .3s ease;visibility:hidden}.wp-block-uwd-mega-menu__menu-container.mode-is-dropdown{right:50%;overflow:hidden;position:fixed;top:0;transform:translateX(50%) scaleY(0);transform-origin:top center;width:min(100vw - var(--wp--preset--spacing--medium) - var(--wp--preset--spacing--medium),var(--wp--style--global--wide-size));z-index:99999}.wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-left,.wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-right{height:calc(100vh - var(--slide-in-top, 0px));overflow-y:auto;position:fixed;top:var(--slide-in-top,0)}.wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-right{left:0;transform:translateX(-100%)}.wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-left{right:0;transform:translateX(100%)}.wp-block-uwd-mega-menu__menu-container .menu-container__close-button{background-color:transparent;border:none;cursor:pointer;position:absolute;left:12px;top:12px}.wp-block-uwd-mega-menu__menu-container.is-open{opacity:1;visibility:visible;z-index:99999}.wp-block-uwd-mega-menu__menu-container.is-open.mode-is-dropdown{transform:translateX(50%) scaleY(1)}.wp-block-uwd-mega-menu__menu-container.is-open.mode-is-slide-in-left,.wp-block-uwd-mega-menu__menu-container.is-open.mode-is-slide-in-right{transform:translateX(0)}.wp-block-uwd-mega-menu .is-responsive{display:flex}.wp-block-uwd-mega-menu__collapsed-link,html.has-modal-open .wp-block-uwd-mega-menu.disable-menu-when-collapsed:not(.has-collapsed-link){display:none}html.has-modal-open .wp-block-uwd-mega-menu.disable-menu-when-collapsed .wp-block-uwd-mega-menu__collapsed-link{display:inherit}html.has-modal-open .wp-block-uwd-mega-menu.disable-menu-when-collapsed .wp-block-uwd-mega-menu__toggle,html.has-modal-open .wp-block-uwd-mega-menu__menu-container{display:none}
-.uwd-mega-menu__settings-panel .settings-panel__description{margin-top:24px}.uwd-mega-menu__settings-panel .components-notice{margin:10px 0 0}.uwd-mega-menu__settings-panel .components-notice__content{margin-left:0}.uwd-mega-menu__layout-panel .components-h-stack>.components-base-control{margin-bottom:0}
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/view.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+.wp-block-uwd-mega-menu__menu-container {
+  visibility: hidden;
+  opacity: 0;
+  transition: transform 0.3s ease, visibility 0.3s ease, opacity 0.3s ease;
+}
+.wp-block-uwd-mega-menu__menu-container.mode-is-dropdown {
+  right: 50%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  transform: translateX(50%) scaleY(0);
+  transform-origin: top center;
+  width: min(100vw - var(--wp--preset--spacing--medium) - var(--wp--preset--spacing--medium), var(--wp--style--global--wide-size));
+  z-index: 99999;
+}
+.wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-left, .wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-right {
+  height: calc(100vh - var(--slide-in-top, 0px));
+  overflow-y: auto;
+  position: fixed;
+  top: var(--slide-in-top, 0px);
+}
+.wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-right {
+  left: 0;
+  transform: translateX(-100%);
+}
+.wp-block-uwd-mega-menu__menu-container.mode-is-slide-in-left {
+  right: 0;
+  transform: translateX(100%);
+}
+.wp-block-uwd-mega-menu__menu-container .menu-container__close-button {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.wp-block-uwd-mega-menu__menu-container.is-open {
+  visibility: visible;
+  opacity: 1;
+  z-index: 99999;
+}
+.wp-block-uwd-mega-menu__menu-container.is-open.mode-is-dropdown {
+  transform: translateX(50%) scaleY(1);
+}
+.wp-block-uwd-mega-menu__menu-container.is-open.mode-is-slide-in-right {
+  transform: translateX(0);
+}
+.wp-block-uwd-mega-menu__menu-container.is-open.mode-is-slide-in-left {
+  transform: translateX(0);
+}
+
+.wp-block-uwd-mega-menu .is-responsive {
+  display: flex;
+}
+
+.wp-block-uwd-mega-menu__collapsed-link {
+  display: none;
+}
+
+html.has-modal-open .wp-block-uwd-mega-menu.disable-menu-when-collapsed:not(.has-collapsed-link) {
+  display: none;
+}
+html.has-modal-open .wp-block-uwd-mega-menu.disable-menu-when-collapsed .wp-block-uwd-mega-menu__collapsed-link {
+  display: inherit;
+}
+html.has-modal-open .wp-block-uwd-mega-menu.disable-menu-when-collapsed .wp-block-uwd-mega-menu__toggle {
+  display: none;
+}
+html.has-modal-open .wp-block-uwd-mega-menu__menu-container {
+  display: none;
+}
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/edit.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+.uwd-mega-menu__settings-panel .settings-panel__description {
+  margin-top: 24px;
+}
+.uwd-mega-menu__settings-panel .components-notice {
+  margin: 10px 0 0;
+}
+.uwd-mega-menu__settings-panel .components-notice__content {
+  margin-left: 0;
+}
+
+.uwd-mega-menu__layout-panel .components-h-stack > .components-base-control {
+  margin-bottom: 0;
+}

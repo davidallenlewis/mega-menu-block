@@ -207,7 +207,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	return (
 		<>
-			<InspectorControls group="content">
+			<InspectorControls group="settings">
 				<PanelBody
 					className="uwd-mega-menu__settings-panel"
 					title={ __( 'Settings', 'mega-menu-block' ) }
@@ -301,7 +301,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Active State', 'mega-menu-block' ) }
-					initialOpen={ true }
+					initialOpen={ false}
 				>
 				<VStack spacing={ 4 }>
 					<ComboboxControl
@@ -326,8 +326,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			<InspectorControls group="settings">
 				<PanelBody
 					className="uwd-mega-menu__layout-panel"
-					title={ __( 'Layout', 'mega-menu-block' ) }
-					initialOpen={ true }
+					title={ __( 'Mode', 'mega-menu-block' ) }
+					initialOpen={ false }
 				>
 					<ToggleGroupControl
 						label={ __( 'Menu Mode', 'mega-menu-block' ) }

@@ -1,1 +1,237 @@
-import{getContext as e,getElement as n,store as o}from"@wordpress/interactivity";const{state:t,actions:i}=o("uwd/mega-menu",{state:{get isMenuOpen(){return Object.values(t.menuOpenedBy).filter(Boolean).length>0},get menuOpenedBy(){return e().menuOpenedBy}},actions:{handleToggleMousedown(){e().isTogglingMenu=!0},toggleMenuOnClick(){const o=e(),{ref:c}=n();window.document.activeElement!==c&&c.focus(),o.isTogglingMenu=!1,t.menuOpenedBy.click||t.menuOpenedBy.focus?(i.closeMenu("click"),i.closeMenu("focus")):(o.previousFocus=c,i.openMenu("click"))},closeMenuOnClick(){i.closeMenu("click"),i.closeMenu("focus")},handleMenuKeydown(e){t.menuOpenedBy.click&&"Escape"===e?.key&&(i.closeMenu("click"),i.closeMenu("focus"))},handleMenuFocusout(n){const o=e();o.isTogglingMenu||o.menuContainer?.contains(n.relatedTarget)||null!==n.relatedTarget&&n.target===window.document.activeElement||(i.closeMenu("click"),i.closeMenu("focus"))},openMenu(e="click"){t.menuOpenedBy[e]=!0},closeMenu(n="click"){const o=e();t.menuOpenedBy[n]=!1,t.isMenuOpen||((o.menuContainer?.contains(window.document.activeElement)||o.megaMenu?.contains(window.document.activeElement))&&o.previousFocus?.focus(),o.previousFocus=null,o.megaMenu=null)}},callbacks:{initMenu(){const o=e(),{ref:i}=n();if(!o.menuContainer){const e=i.querySelector(".wp-block-uwd-mega-menu__menu-container");if(e){const n=e.querySelector(".menu-container__close-button");n&&(n.removeAttribute("data-wp-on--click"),n.addEventListener("click",()=>{o.menuOpenedBy.click=!1,o.menuOpenedBy.focus=!1})),e.addEventListener("focusout",n=>{o.isTogglingMenu||i.contains(n.relatedTarget)||e.contains(n.relatedTarget)||(o.menuOpenedBy.click=!1,o.menuOpenedBy.focus=!1)}),document.body.appendChild(e),o.menuContainer=e}}const c=o.menuContainer;if(c)if(t.isMenuOpen){o.megaMenu=i;const e=i.querySelector(".wp-block-uwd-mega-menu__toggle"),n=()=>{if(!e)return;const n=e.getBoundingClientRect();c.style.top=`${n.bottom+20}px`,c.style.setProperty("--slide-in-top",`${n.bottom}px`)};n(),o._reposition=n,window.addEventListener("scroll",n,{passive:!0}),window.addEventListener("resize",n,{passive:!0}),c.classList.add("is-open")}else o._reposition&&(window.removeEventListener("scroll",o._reposition),window.removeEventListener("resize",o._reposition),o._reposition=null),c.classList.remove("is-open")}}});
+import * as __WEBPACK_EXTERNAL_MODULE__wordpress_interactivity_8e89b257__ from "@wordpress/interactivity";
+/******/ var __webpack_modules__ = ({
+
+/***/ "@wordpress/interactivity"
+/*!*******************************************!*\
+  !*** external "@wordpress/interactivity" ***!
+  \*******************************************/
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE__wordpress_interactivity_8e89b257__;
+
+/***/ }
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!*********************!*\
+  !*** ./src/view.js ***!
+  \*********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/interactivity */ "@wordpress/interactivity");
+/**
+ * WordPress dependencies
+ */
+
+const {
+  state,
+  actions
+} = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.store)('uwd/mega-menu', {
+  state: {
+    get isMenuOpen() {
+      // The menu is opened if either `click` or `focus` is true.
+      return Object.values(state.menuOpenedBy).filter(Boolean).length > 0;
+    },
+    get menuOpenedBy() {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      return context.menuOpenedBy;
+    }
+  },
+  actions: {
+    handleToggleMousedown() {
+      // Set a flag before focusout fires so handleMenuFocusout knows
+      // not to close the menu when the toggle button itself is clicked.
+      // This is needed because Safari sets relatedTarget to null on click.
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      context.isTogglingMenu = true;
+    },
+    toggleMenuOnClick() {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)();
+      // Safari won't send focus to the clicked element, so we need to manually place it: https://bugs.webkit.org/show_bug.cgi?id=22261
+      if (window.document.activeElement !== ref) ref.focus();
+      context.isTogglingMenu = false;
+      if (state.menuOpenedBy.click || state.menuOpenedBy.focus) {
+        actions.closeMenu('click');
+        actions.closeMenu('focus');
+      } else {
+        context.previousFocus = ref;
+        actions.openMenu('click');
+      }
+    },
+    closeMenuOnClick() {
+      actions.closeMenu('click');
+      actions.closeMenu('focus');
+    },
+    handleMenuKeydown(event) {
+      if (state.menuOpenedBy.click) {
+        // If Escape close the menu.
+        if (event?.key === 'Escape') {
+          actions.closeMenu('click');
+          actions.closeMenu('focus');
+        }
+      }
+    },
+    handleMenuFocusout(event) {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+
+      // If the toggle button is being clicked (tracked via mousedown), skip
+      // closing here — toggleMenuOnClick will handle it. This fixes a Safari
+      // bug where relatedTarget is always null on click, which previously
+      // caused focusout to close the menu before the click reopened it.
+      if (context.isTogglingMenu) return;
+
+      // Focus moving into the portaled container is not a reason to close.
+      if (context.menuContainer?.contains(event.relatedTarget)) return;
+
+      // The event.relatedTarget is null when something outside the navigation menu is clicked. This is only necessary for Safari.
+      if (event.relatedTarget === null || event.target !== window.document.activeElement) {
+        actions.closeMenu('click');
+        actions.closeMenu('focus');
+      }
+    },
+    openMenu(menuOpenedOn = 'click') {
+      state.menuOpenedBy[menuOpenedOn] = true;
+    },
+    closeMenu(menuClosedOn = 'click') {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      state.menuOpenedBy[menuClosedOn] = false;
+
+      // Reset the menu reference and button focus when closed.
+      if (!state.isMenuOpen) {
+        if (context.menuContainer?.contains(window.document.activeElement) || context.megaMenu?.contains(window.document.activeElement)) {
+          context.previousFocus?.focus();
+        }
+        context.previousFocus = null;
+        context.megaMenu = null;
+      }
+    }
+  },
+  callbacks: {
+    initMenu() {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      const {
+        ref
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getElement)(); // ref = the <li>
+
+      // Portal the __menu-container to <body> once on first run.
+      // This removes it from the <nav> DOM tree so no navigation-block
+      // descendant selectors or inherited styles can reach it.
+      if (!context.menuContainer) {
+        const container = ref.querySelector('.wp-block-uwd-mega-menu__menu-container');
+        if (container) {
+          // Wire up the close button with a plain listener since it will
+          // no longer be inside the Interactivity API context chain.
+          const closeBtn = container.querySelector('.menu-container__close-button');
+          if (closeBtn) {
+            closeBtn.removeAttribute('data-wp-on--click');
+            closeBtn.addEventListener('click', () => {
+              context.menuOpenedBy.click = false;
+              context.menuOpenedBy.focus = false;
+            });
+          }
+
+          // Close when focus leaves the portaled container and doesn't
+          // return to the <li> toggle.
+          container.addEventListener('focusout', event => {
+            if (context.isTogglingMenu) return;
+            if (ref.contains(event.relatedTarget)) return;
+            if (container.contains(event.relatedTarget)) return;
+            context.menuOpenedBy.click = false;
+            context.menuOpenedBy.focus = false;
+          });
+          document.body.appendChild(container);
+          context.menuContainer = container;
+        }
+      }
+
+      // Sync open/closed state and position to the portaled container.
+      const container = context.menuContainer;
+      if (!container) return;
+      if (state.isMenuOpen) {
+        context.megaMenu = ref;
+        const toggle = ref.querySelector('.wp-block-uwd-mega-menu__toggle');
+
+        // Reposition the container relative to the toggle's current viewport rect.
+        // Called on open and on every scroll/resize so it tracks the toggle
+        // even when the nav scrolls with the page.
+        const reposition = () => {
+          if (!toggle) return;
+          const rect = toggle.getBoundingClientRect();
+          container.style.top = `${rect.bottom + 20}px`;
+          container.style.setProperty('--slide-in-top', `${rect.bottom}px`);
+        };
+        reposition();
+
+        // Store the handler so we can remove it when the menu closes.
+        context._reposition = reposition;
+        window.addEventListener('scroll', reposition, {
+          passive: true
+        });
+        window.addEventListener('resize', reposition, {
+          passive: true
+        });
+        container.classList.add('is-open');
+      } else {
+        // Remove scroll/resize listeners when closed.
+        if (context._reposition) {
+          window.removeEventListener('scroll', context._reposition);
+          window.removeEventListener('resize', context._reposition);
+          context._reposition = null;
+        }
+        container.classList.remove('is-open');
+      }
+    }
+  }
+});
+})();
+
+
+//# sourceMappingURL=view.js.map
